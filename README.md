@@ -1,18 +1,24 @@
-# Object detection under the linear subspace model (LSM)
-Matlab code accompanying the paper "Object detection under the linear subspace model"
+# Object Detection under the Linear Subspace Model (LSM)
 
-The functions are written in MATLAB and do not use any external packages.
+This repository contains MATLAB code accompanying the paper titled "Object Detection under the Linear Subspace Model".
 
-See .pdf for more details
+The functions are implemented in MATLAB and do not require any external packages.
 
-# Getting started
+For more detailed information, please refer to the accompanying PDF file.
 
-Add folder to the MATLAB.
-Run main.m
-The code output figures stored at a directory named 'figs' under the same instaled path.
+## Getting Started
 
+1. Add the folder to your MATLAB directory.
+2. Run `main.m`.
 
-# Citation
+The code will generate figures stored in a directory named 'figs' within the same installed path.
+
+## Running Time
+
+- Running time on ___ using the GPU is approximately ___.
+- Running time on ___ without using the GPU is approximately ___.
+
+## Citation
 
 Please cite the following papers when using the code
 
