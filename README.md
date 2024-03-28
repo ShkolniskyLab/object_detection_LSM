@@ -23,4 +23,5 @@ The code will generate figures stored in a directory named 'figs' within the sam
 Please cite the following papers when using the code
 
 A. Eldar,K. Mor, S. Devenport,T. Bendory, A. Schwartzman and Y. Shkolnisky.  Object detection under the linear subspace model.
+
 Z. Zhao, Y. Shkolnisky, A. Singer, Fast Steerable Principal Component Analysis, IEEE Transactions on Computational Imaging, 2 (1), pp. 1-12 (2016).​ PMID: 27570801 [PubMed] PMCID: PMC4996495​.
