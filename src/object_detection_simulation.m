@@ -4,7 +4,7 @@ function object_detection_simulation(img_sz,obj_sz,objects_density,num_of_basis_
 %% parameters 
 sideLengthAlgorithm = ceil(2*obj_sz+delta); % deletion parameter r
 dist_obj_centers = ceil(obj_sz+1.5*delta); % distance between objects
-num_of_exp_noise = 10^5; % for estimating the test value
+num_of_exp_noise = 10^3; % for estimating the test value
 num_of_exp_noise_for_snr = 10^3; % for estimating the expectation of the noise norm in a box of obj_sz side length
 
 error_per_exp_bh = zeros(num_of_exp,1);
@@ -35,7 +35,7 @@ objects = zeros(obj_sz,obj_sz,num_of_obj_max);
     end
     
 %% estimating the expectation of the norm the noise to determaine SNR
-[z,~,~,~]=noise_exp2d(obj_sz,num_of_exp_noise_for_snr,1,gpu_use);
+[z]=noise_exp2d(obj_sz,num_of_exp_noise_for_snr,0,gpu_use);
 norm_z_vec = zeros(num_of_exp_noise_for_snr,1);
 for i =1:num_of_exp_noise_for_snr
    norm_z_vec(i) = norm(z(:,:,i),'fro');
@@ -43,16 +43,27 @@ end
 norm_z = mean(norm_z_vec);
 
  %% computing S^z and z_tilde to estimate the test function
-[z,~,~,~]=noise_exp2d(sideLengthAlgorithm+obj_sz,num_of_exp_noise,1,gpu_use);
-[z_tilde,S_z]= projected_noise_simulation_from_noise_patches(z,basis,num_of_exp_noise,gpu_use);
-if test_fun == 1
-    z_test = S_z;
-else
-    z_test = z_tilde;
+% [z,~,~,~]=noise_exp2d(sideLengthAlgorithm+obj_sz,num_of_exp_noise,1,gpu_use);
+% [z_tilde,S_z]= projected_noise_simulation_from_noise_patches(z,basis,num_of_exp_noise,gpu_use);
+% if test_fun == 1
+%     z_test = S_z;
+% else
+%     z_test = z_tilde;
+% end
+z_max = zeros(1,num_of_exp_noise);
+basis_trans = zeros(size(basis));
+for j = 1:size(basis,3)
+    basis_trans(:,:,j) = single(flip(flip(basis(:,:,j),1),2));
 end
-z_max = zeros(1,size(z_test,3));
-for i=1:size(z_test,3)
-    z_max(i) = max(z_test(:,:,i),[],"all");
+for i=1:num_of_exp_noise
+    [z]=noise_exp2d(sideLengthAlgorithm+obj_sz,1,0,gpu_use);
+    [z_tilde,S_z]= projected_noise_simulation_from_noise_patches(z,basis_trans,1,gpu_use);
+    if test_fun == 1
+     z_test = S_z;
+    else
+     z_test = z_tilde;
+    end
+    z_max(i) = max(z_test,[],"all");
 end
 if test_fun==1
     str_test = 'Sz';
@@ -60,7 +71,7 @@ else
     str_test = 'ztilde';
 end
 %% constructing the noise for the experiments
-[Z,~,~,~]=noise_exp2d(img_sz,num_of_exp,0,gpu_use);
+[Z]=noise_exp2d(img_sz,num_of_exp,0,gpu_use);
 
 %% starting experiments for each SNR
 for l = 1:length(SNR_lst)

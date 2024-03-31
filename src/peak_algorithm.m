@@ -13,19 +13,17 @@ rDelAlgorithm = floor(sideLengthAlgorithm/2);
 peaks = zeros(floor(img_sz/rDelAlgorithm)^2,1);
 peaks_loc = zeros(floor(img_sz/(rDelAlgorithm))^2,2);
 obj_sz=size(basis,1);
-% basis = gpuArray(basis);
 if gpu_use==1
     img = gpuArray(img);
     S = zeros(img_sz,img_sz,num_of_basis_functions); 
     for m=1:num_of_basis_functions
-        
-        S(:,:,m) =gather(conv2(img,flip(flip(basis(:,:,m),1),2),'same').^2);
+        S(:,:,m) =gather(conv2(img,basis(:,:,m),'same').^2);
     end
     S = gather(sum(S,3));
 else
     S = zeros(img_sz,img_sz,num_of_basis_functions); 
     for m=1:num_of_basis_functions
-        S(:,:,m) =conv2(img,flip(flip(basis(:,:,m),1),2),'same').^2;
+        S(:,:,m) =conv2(img,basis(:,:,m),'same').^2;
     end
     S =  sum(S,3);
 end
@@ -51,9 +49,6 @@ pMax = 1;
             idxColCandidate (max(i_col-rDelAlgorithm,1):min(i_col+rDelAlgorithm,scoring_mat_sz)) = 1;
             scoringMat(idxRow(idxRowCandidate==1),idxCol(idxColCandidate==1)) = 0;
             cnt = cnt + 1;
-%             if cnt==95
-%                 x = 1;
-%             end
     end
     peaks = peaks(1:cnt-1);
     peaks_loc = peaks_loc(1:cnt-1,:);
