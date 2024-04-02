@@ -1,13 +1,5 @@
 function [z_tilde,S_z] = projected_noise_simulation_from_noise_patches(z,basis,num_of_exp_noise,gpu_use)
-%     mu = zeros(size(noise_samples,1),1);
-%     noise_samples = mvnrnd(mu,noise_cov,num_of_exp_noise);
-% trying single
-    z = single(repmat(z,[1,1,size(basis,3)]));
-    % basis = single(basis);
-    % if gpu_use == 1
-    %     basis = gpuArray(basis);
-    % end
-%     noise_samples = gpuArray(noise_samples);
+    z = repmat(z,[1,1,size(basis,3)]);
     sz = size(z,1);
     sz_pn = size(conv2(reshape(z(:,:,1),sz,sz),flip(flip(basis(:,:,1),1),2),'valid'),1);
     S_z = zeros(sz_pn,sz_pn,num_of_exp_noise);
@@ -15,9 +7,9 @@ function [z_tilde,S_z] = projected_noise_simulation_from_noise_patches(z,basis,n
     
     for i=1:num_of_exp_noise
         if gpu_use == 1
-            S = gpuArray(single(zeros(sz_pn,sz_pn,size(basis,3))));
+            S = gpuArray(zeros(sz_pn,sz_pn,size(basis,3)));
         else
-            S = single(zeros(sz_pn,sz_pn,size(basis,3)));
+            S = zeros(sz_pn,sz_pn,size(basis,3));
         end
         for j = 1:size(basis,3)
             S(:,:,j) =conv2(z(:,:,i),basis(:,:,j),'valid').^2;

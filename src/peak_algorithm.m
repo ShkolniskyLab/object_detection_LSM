@@ -4,9 +4,7 @@ function [peaks,peaks_loc,S] = peak_algorithm(img,basis,sideLengthAlgorithm,gpu_
 % peaks        list of peaks values
 % peaks_loc    list of peak locations
 % S            scoring map
-if gpu_use == 1
-    basis = gpuArray(basis);
-end
+
 num_of_basis_functions = size(basis,3);
 img_sz = size(img,1);
 rDelAlgorithm = floor(sideLengthAlgorithm/2);

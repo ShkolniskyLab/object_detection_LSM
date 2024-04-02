@@ -33,7 +33,7 @@ end
 % If one needs an autocorrelation that has the value delta at distance
 % % max_d, then the following code should be used:
 delta=1.0e-15;
-max_d=10;
+max_d=5;
 T1=-log(delta)/max_d; % Sampling rate
 
 % T1=1.66;
@@ -41,7 +41,7 @@ noise=zeros(N,N,K);
 M=2*N-1;    % Need twice the number of random variables
 
 [K1,K2]=meshgrid(-(N-1):(N-1),-(N-1):(N-1));
-R=single(exp(-T1.*sqrt(K1.^2+K2.^2)));
+R=exp(-T1.*sqrt(K1.^2+K2.^2));
 if norm(imag(R(:)))>1.0e-10
     warning('R has imaginary components');
 end
@@ -49,18 +49,15 @@ H=real(cfft2(R)); % By Poisson formula, H is the periodized Fourier transform of
 c2=M^2/(sum(H(:))); % The normalization ensures that the colored samples have variance 1
 nf=ifftshift(sqrt(H.*c2));
 
-W=single(iwindow(M,'hann'));
-% P=single(zeros(M,M,K));
+W=iwindow(M,'hann');
 for k=1:K % Apply filter
-     gn=single(randn(M));              % Generate noise
+     gn=randn(M);              % Generate noise
      cn=ifft2(fft2(gn).*nf);   % Apply filter
      noise(:,:,k)=cn(1:N,1:N); % Take N samples
      % P(:,:,k)=cfft2(cn.*W);
 end
 
-% P=mean(abs(P).^2,3);
-% P=P./norm(P(:));
-% 
+
 
 if norm(imag(noise(:)))>1.0e-8
     warning('Noise has imaginary components...');

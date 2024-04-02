@@ -5,7 +5,7 @@ function object_detection_simulation(img_sz,obj_sz,objects_density,num_of_basis_
 sideLengthAlgorithm = ceil(2*obj_sz+delta); % deletion parameter r
 dist_obj_centers = ceil(obj_sz+1.5*delta); % distance between objects
 num_of_exp_noise = 10^5; % for estimating the test value
-num_of_exp_noise_for_snr = 10^5; % for estimating the expectation of the noise norm in a box of obj_sz side length
+num_of_exp_noise_for_snr = 10^3; % for estimating the expectation of the noise norm in a box of obj_sz side length
 
 error_per_exp_bh = zeros(num_of_exp,1);
 power_per_exp_bh = zeros(num_of_exp,1);
@@ -42,11 +42,11 @@ for i =1:num_of_exp_noise_for_snr
 end
 norm_z = mean(norm_z_vec);
 
- %% computing  z_tilde and S^z to estimate the test function
+ %% computing S^z and z_tilde to estimate the test function
 z_max = zeros(1,num_of_exp_noise);
 basis_trans = zeros(size(basis));
 for j = 1:size(basis,3)
-    basis_trans(:,:,j) = flip(flip(basis(:,:,j),1),2);
+    basis_trans(:,:,j) = single(flip(flip(basis(:,:,j),1),2));
 end
 if gpu_use == 1
     basis_trans = gpuArray(basis_trans);
@@ -64,7 +64,6 @@ if paralell_com==0
     end
 else
    parfor i=1:num_of_exp_noise
-         i
         [z]=noise_exp2d(sideLengthAlgorithm+obj_sz,1,0,gpu_use);
         [z_tilde,S_z]= projected_noise_simulation_from_noise_patches(z,basis_trans,1,gpu_use);
         if test_fun == 1
@@ -75,7 +74,6 @@ else
         z_max(i) = max(z_test,[],"all");
    end 
 end
-
 if test_fun==1
     str_test = 'Sz';
 else
@@ -166,7 +164,7 @@ else
             save_fig(output_folder,"Y.jpg")
             figure;imagesc(X);colormap('gray');axis image; axis off
             save_fig(output_folder,"X.jpg")
-            figure;imagesc(Z(:,:,exp));colormap('gray');axis image; axis off
+            figure;imagesc(Z(:,:,num_of_exp));colormap('gray');axis image; axis off
             save_fig(output_folder,"Z.jpg")
             figure;imagesc(Y_scoring_map);colormap('hot');axis image; axis off
             save_fig(output_folder,"Y_score.jpg")
@@ -200,7 +198,26 @@ save_fig(output_folder_bon,'bon.jpg')
 figure;
 plot(1:num_of_exp,power_per_exp_bon); xlabel('Experiments');title(['Power = ',num2str(mean(power_per_exp_bon))]);
 save_fig(output_folder_bon,'power.jpg')
+ %% example of images
+figure;imagesc(Y);colormap('gray');axis image; axis off
+save_fig(output_folder,"Y.jpg")
+figure;imagesc(X);colormap('gray');axis image; axis off
+save_fig(output_folder,"X.jpg")
+figure;imagesc(Z(:,:,num_of_exp));colormap('gray');axis image; axis off
+save_fig(output_folder,"Z.jpg")
+figure;imagesc(Y_scoring_map);colormap('hot');axis image; axis off
+save_fig(output_folder,"Y_score.jpg")
 
+%% circles on detected objects fdr
+figure;imagesc(X);colormap('gray');axis image;axis off;
+Y_peaks_loc_tmp = flip(Y_peaks_loc(1:K_bh,:),2);
+viscircles(Y_peaks_loc_tmp,ceil((obj_sz+5)/2)*ones(size(Y_peaks_loc_tmp,1),1),'Color','green','LineWidth',0.5);
+save_fig(output_folder_bh,"X_circles.jpg")
+%% circles on detected objects fwer
+figure;imagesc(X);colormap('gray');axis image;axis off;
+Y_peaks_loc_tmp = flip(Y_peaks_loc(1:K_bon,:),2);
+viscircles(Y_peaks_loc_tmp,ceil((obj_sz+5)/2)*ones(size(Y_peaks_loc_tmp,1),1),'Color','green','LineWidth',0.5);
+save_fig(output_folder_bon,"X_circles.jpg")
 close all;
 end
 
