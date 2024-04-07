@@ -1,7 +1,7 @@
 function [z_tilde,S_z] = projected_noise_simulation_from_noise_patches(z,basis,num_of_exp_noise,gpu_use)
     z = repmat(z,[1,1,size(basis,3)]);
     sz = size(z,1);
-    sz_pn = size(conv2(reshape(z(:,:,1),sz,sz),flip(flip(basis(:,:,1),1),2),'valid'),1);
+    sz_pn = size(conv2(reshape(z(:,:,1),sz,sz),basis(:,:,1),'valid'),1);
     S_z = zeros(sz_pn,sz_pn,num_of_exp_noise);
     z_tilde = zeros(sz_pn,sz_pn,num_of_exp_noise);
     

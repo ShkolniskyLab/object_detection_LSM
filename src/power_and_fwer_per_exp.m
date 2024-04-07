@@ -6,7 +6,7 @@ function [power_per_exp,error_per_exp] = power_and_fwer_per_exp(Y_peaks_loc,lst_
     for i = 1:R_y_per_exp
         peak_is_true = 0;
         for j = 1:num_of_obj
-            if norm(Y_peaks_loc(i,:)-lst_of_object_centers(j,:),Inf)<ceil(delta/2)
+            if norm(Y_peaks_loc(i,:)-lst_of_object_centers(j,:),Inf)<=ceil(delta/2)
               power_per_exp = power_per_exp + 1;
               peak_is_true = 1;
               break
