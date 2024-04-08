@@ -14,8 +14,8 @@ The code will generate figures stored in a directory named 'figs' within the sam
 
 ## Running Time
 
-- Running time on a Linux machine with 16 cores running at 2.1GHz, 768GB of memory, and an Nvidia Titan GPU, is approximately 35 minuets.
-- Running time on MacBook Pro 14 with 8 cores running at 3.2GHz without the GPU is approximately 3 hours and 30 minuets.
+- Running time on a Linux machine with 16 cores running at 2.1GHz, 768GB of memory, and an Nvidia Titan GPU, without pre processing, is approximately 35 minuets.
+- Running time on MacBook Pro 14 with 8 cores running at 3.2GHz without the GPU and with pre processing is approximately 97 minutes.
 
 ## Citation
 
