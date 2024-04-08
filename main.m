@@ -52,7 +52,7 @@ test_fun = 1;
 % General
 num_of_exp =500;
 gpu_choice = 0;
-paralell_com = 1;
+paralell_com = 0;
 SNR_lst = [0.05,0.03,0.025,0.02];
 output_folder_figs = './figs/'; 
 
