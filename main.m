@@ -37,19 +37,22 @@
 
 %% parameters
 pre_process = 1;
-% sample formation
+
+% Sample formation
 img_sz = 2^10;
 obj_sz = 2^6;
 objects_density = 0.5;
 num_of_basis_functions = 50;
+
 % Algorithm
 delta = 10;
 alpha = 0.05;
 test_fun = 1;
+
 % General
 num_of_exp =500;
 gpu_choice = 0;
-paralell_com = 0;
+paralell_com = 1;
 SNR_lst = [0.05,0.03,0.025,0.02];
 output_folder_figs = './figs/'; 
 
@@ -89,6 +92,6 @@ end
 
 %% run simulations
 addpath('./src/')
-object_detection_simulation(img_sz,obj_sz,objects_density,...
+object_detection_simulation(pre_process,img_sz,obj_sz,objects_density,...
     num_of_basis_functions,delta,alpha,test_fun,num_of_exp,...
     gpu_use,paralell_com,SNR_lst,output_folder_figs);
