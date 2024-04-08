@@ -8,21 +8,21 @@
 %                           test function estimation. This is highly
 %                           recommended for systems without strong GPUs
 %                           (see running times below).
-% img_sz                    size of each noisy image.
-% obj_sz                    size of each object.
-% objects_density           (number_of_objects * object_size) / img_size.
-% num_of_basis_functions    dimension of the object subspace.
+% img_sz                    Size of each noisy image (in pixels).
+% obj_sz                    Size of each object (in pixels).
+% objects_density           Number_of_objects*(object_size/img_size)^2.
+% num_of_basis_functions    Dimension of the objects subspace
 % delta                     delta parameter that should satisfy the delta
 %                           property (see the accompanying paper).
 % alpha                     error rate control parameter.
 % test_fun                  if equal one use S^z for the test function,
 %                           else, use z~.
-% gpu_choice                number of GPUs to use. 0 to not use the GPU.
-%                           'all' to use all availables GPUs.
-% parallel_com              if equal one, use parallel computing.
+% gpu_choice                Number of gpus to use. 0 to use cpu only.
+%                           'all' to use all gpus.   
+% parallel_com              If equal one, use parallel computing.
 % SNR_lst                   SNRs list for the experiments.
-% num_of_exp                number of experiments to conduct.
-% output_folder_figs        folder to save figures. Create if not exists.
+% num_of_exp                Number of experiments to conduct.
+% output_folder_figs        Folder to save figures. Create if does not exist.
 %
 % Outputs:
 % The outputs will be saved in ./figs/z~ or /figs/S^z, depending on the test
@@ -46,7 +46,7 @@ num_of_basis_functions = 50;
 delta = 10;
 alpha = 0.05;
 test_fun = 1;
-% general
+% General
 num_of_exp =500;
 gpu_choice = 0;
 paralell_com = 0;
@@ -59,19 +59,27 @@ if pre_process == 1 % this parameters should be used
     num_of_basis_functions = 50;
     delta = 10;
 end
-% GPU validation
+% GPU computing
 delete(gcp('nocreate')) % start a new pool.
 % number of available GPUs
 availableGPUs = gpuDeviceCount("available");
-if gpu_choice =='all'
+if strcmpi(gpu_choice, 'all')
     gpu_choice = availableGPUs;
 end
+
 % Validate user input
 if gpu_choice < 0 || gpu_choice > availableGPUs
-    error(['Invalid GPU choice. Please choose a number within the available range: ','[0,',num2str(availableGPUs),']']);
+    if availableGPUs > 0
+        error(['Invalid number of GPUs requested. ',...
+            'Please choose a number within the available range: ',...
+            '[0,',num2str(availableGPUs),']']);
+    else
+        error('Cannot use GPUs as requested. No GPU available ');
+    end
 end
-% assign gpu_use for code. 0 to not use the gpu
-if gpu_choice ==0
+
+% Set GPU flag gpu_use. 0 to not use gpu.
+if gpu_choice == 0
     gpu_use = 0;
 else
     gpu_use = 1;
@@ -81,4 +89,6 @@ end
 
 %% run simulations
 addpath('./src/')
-object_detection_simulation(pre_process,img_sz,obj_sz,objects_density,num_of_basis_functions,delta,alpha,test_fun,num_of_exp,gpu_use,paralell_com,SNR_lst,output_folder_figs);
+object_detection_simulation(img_sz,obj_sz,objects_density,...
+    num_of_basis_functions,delta,alpha,test_fun,num_of_exp,...
+    gpu_use,paralell_com,SNR_lst,output_folder_figs);
