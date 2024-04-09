@@ -53,7 +53,7 @@ classdef parfor_wait < handle
            Obj.FileName = InParser.Results.FileName;
            Obj.ReportInterval = InParser.Results.ReportInterval;
            if Obj.Waitbar
-               Obj.WaitbarHandle = waitbar(0, [num2str(0), '%'], 'Resize', true,'Name', ['Progrees bar for SNR= ',Obj.SNR]);
+               Obj.WaitbarHandle = waitbar(0, [num2str(0), '%'], 'Resize', true,'Name', ['Progress bar for SNR= ',Obj.SNR]);
            end
            switch Obj.FileName
                case 'screen'

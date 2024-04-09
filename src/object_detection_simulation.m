@@ -84,9 +84,9 @@ if pre_process == 0
 end
 
 if test_fun==1
-    str_test = 'test function S^z';
+    str_test = 'Sz';
 else
-    str_test = 'test function z~';
+    str_test = 'ztilde';
 end
 
 %% starting experiments for each SNR
@@ -185,17 +185,17 @@ end
                     figure('Visible', 'off');imagesc(Z(:,:,exp));colormap('gray');axis image; axis off
                     save_fig(output_folder,"Z.jpg")
                     figure('Visible', 'off');imagesc(Y_scoring_map);colormap('hot');axis image; axis off
-                    save_fig(output_folder,"S^y.jpg")          
+                    save_fig(output_folder,"Sy.jpg")          
                     %% circles on detected objects fdr
                     figure('Visible', 'off');imagesc(X);colormap('gray');axis image;axis off;
                     Y_peaks_loc_tmp = flip(Y_peaks_loc(1:K_bh,:),2);
                     viscircles(Y_peaks_loc_tmp,ceil((obj_sz+5)/2)*ones(size(Y_peaks_loc_tmp,1),1),'Color','green','LineWidth',0.5);
-                    save_fig(output_folder_bh,"X_circles.jpg")
+                    save_fig(output_folder_bh,"Xcircles.jpg")
                     %% circles on detected objects fwer
                     figure('Visible', 'off');imagesc(X);colormap('gray');axis image;axis off;
                     Y_peaks_loc_tmp = flip(Y_peaks_loc(1:K_bon,:),2);
                     viscircles(Y_peaks_loc_tmp,ceil((obj_sz+5)/2)*ones(size(Y_peaks_loc_tmp,1),1),'Color','green','LineWidth',0.5);
-                    save_fig(output_folder_bon,"X_circles.jpg")
+                    save_fig(output_folder_bon,"Xcircles.jpg")
                 end
         
             end
