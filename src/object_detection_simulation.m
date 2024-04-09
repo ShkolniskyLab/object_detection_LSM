@@ -130,30 +130,26 @@ end
                 %% computing power and error rates per exp
                 [power_per_exp_bh(exp),error_per_exp_bh(exp)] = power_and_fdr_per_exp(Y_peaks_loc,lst_of_object_centers,true_locations,K_bh,num_of_obj_per_exp,delta);
                 [power_per_exp_bon(exp),error_per_exp_bon(exp)] = power_and_fwer_per_exp(Y_peaks_loc,lst_of_object_centers,true_locations,K_bon,num_of_obj_per_exp,delta);      
-                % Update waitbar
-                % waitbar(exp/num_of_exp, h, sprintf('Progress: %d%%', round(exp/num_of_exp * 100)));
-                % pause(0.1); % This pause is just for demonstration purposes, remove or adjust as needed
                 if exp==1
-                     %% example of images
+                    %% example of images
                     figure('Visible', 'off');imagesc(Y);colormap('gray');axis image; axis off
                     save_fig(output_folder,"Y.jpg")
                     figure('Visible', 'off');imagesc(X);colormap('gray');axis image; axis off
                     save_fig(output_folder,"X.jpg")
-                    figure('Visible', 'off');imagesc(Z);colormap('gray');axis image; axis off
+                    figure('Visible', 'off');imagesc(Z(:,:,exp));colormap('gray');axis image; axis off
                     save_fig(output_folder,"Z.jpg")
                     figure('Visible', 'off');imagesc(Y_scoring_map);colormap('hot');axis image; axis off
-                    save_fig(output_folder,"Y_score.jpg")
-                    
+                    save_fig(output_folder,"Sy.jpg")          
                     %% circles on detected objects fdr
                     figure('Visible', 'off');imagesc(X);colormap('gray');axis image;axis off;
                     Y_peaks_loc_tmp = flip(Y_peaks_loc(1:K_bh,:),2);
                     viscircles(Y_peaks_loc_tmp,ceil((obj_sz+5)/2)*ones(size(Y_peaks_loc_tmp,1),1),'Color','green','LineWidth',0.5);
-                    save_fig(output_folder_bh,"X_circles.jpg")
+                    save_fig(output_folder_bh,"Xcircles.jpg")
                     %% circles on detected objects fwer
                     figure('Visible', 'off');imagesc(X);colormap('gray');axis image;axis off;
                     Y_peaks_loc_tmp = flip(Y_peaks_loc(1:K_bon,:),2);
                     viscircles(Y_peaks_loc_tmp,ceil((obj_sz+5)/2)*ones(size(Y_peaks_loc_tmp,1),1),'Color','green','LineWidth',0.5);
-                    save_fig(output_folder_bon,"X_circles.jpg")
+                    save_fig(output_folder_bon,"Xcircles.jpg")
                 end
             end
             WaitMessage.Destroy
